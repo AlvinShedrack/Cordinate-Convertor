@@ -1,5 +1,5 @@
 @echo off
-cd /d D:\MY HANDHELD GPS
+cd /d D:\Cordinate Convertor
 git add .
 git commit -m "other mods"
 git push origin Main
