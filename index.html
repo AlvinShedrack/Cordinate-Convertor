@@ -142,6 +142,80 @@
   <h1>Coordinate Converter</h1>
 
   <div class="converter">
+    <h2>ARC1960 → Google Maps</h2>
+    <label>ARC1960 Easting (m):</label><input type="number" id="arc_to_dd_e" step="any">
+    <label>ARC1960 Northing (m):</label><input type="number" id="arc_to_dd_n" step="any">
+    <button id="arcMapBtn" onclick="arcToDD()">View in Google Maps</button>
+  </div>
+  
+  <script>
+  function arcToDD() {
+    const arcE = parseFloat(document.getElementById('arc_to_dd_e').value);
+    const arcN = parseFloat(document.getElementById('arc_to_dd_n').value);
+  
+    if (isNaN(arcE) || isNaN(arcN)) {
+      alert("Please enter valid ARC1960 coordinates.");
+      return;
+    }
+  
+    // --- STEP 1: ARC1960 to ITRF (nearest reference offset) ---
+    const referenceOffsets = [
+      { E: 600000, N: 80000, eAdd: 84.178, nAdd: -296.226 },
+      { E: 620000, N: 90000, eAdd: 84.104, nAdd: -296.369 },
+      { E: 630000, N: 100000, eAdd: 84.050, nAdd: -296.508 },
+      { E: 640000, N: 110000, eAdd: 83.987, nAdd: -296.654 },
+      { E: 650000, N: 120000, eAdd: 83.915, nAdd: -296.804 },
+      { E: 660000, N: 130000, eAdd: 83.833, nAdd: -296.957 },
+      { E: 680000, N: 150000, eAdd: 83.640, nAdd: -297.266 },
+      { E: 680000, N: 160000, eAdd: 83.584, nAdd: -297.313 },
+      { E: 680000, N: 180000, eAdd: 83.464, nAdd: -297.356 },
+    ];
+  
+    let nearest = referenceOffsets[0];
+    let minDist = Math.hypot(arcE - nearest.E, arcN - nearest.N);
+    for (let i = 1; i < referenceOffsets.length; i++) {
+      const ref = referenceOffsets[i];
+      const dist = Math.hypot(arcE - ref.E, arcN - ref.N);
+      if (dist < minDist) {
+        nearest = ref;
+        minDist = dist;
+      }
+    }
+    const itrfE = arcE + nearest.eAdd;
+    const itrfN = arcN + nearest.nAdd;
+  
+    // --- STEP 2: ITRF (UTM Zone 36N assumed) to Lat/Lon ---
+    const a = 6378137.0, f = 1/298.257223563, k0 = 0.9996, e2 = f * (2 - f);
+    const x = itrfE - 500000;
+    const y = itrfN; // Assume Northern Hemisphere
+    const zone = 36;
+    const lambda0 = ((zone - 1) * 6 - 180 + 3) * Math.PI / 180;
+  
+    const m = y / k0;
+    const mu = m / (a * (1 - e2/4 - 3*e2*e2/64 - 5*e2*e2*e2/256));
+    const e1 = (1 - Math.sqrt(1 - e2)) / (1 + Math.sqrt(1 - e2));
+    const phi1 = mu + (3*e1/2 - 27*e1**3/32)*Math.sin(2*mu)
+      + (21*e1**2/16 - 55*e1**4/32)*Math.sin(4*mu)
+      + (151*e1**3/96)*Math.sin(6*mu);
+    const n1 = a / Math.sqrt(1 - e2 * Math.sin(phi1)**2);
+    const r1 = a * (1 - e2) / Math.pow(1 - e2 * Math.sin(phi1)**2, 1.5);
+    const d = x / (n1 * k0);
+    const lat = phi1 - (n1 * Math.tan(phi1) / r1) * (d*d/2);
+    const lon = lambda0 + (d - d**3/6) / Math.cos(phi1);
+  
+    const latDeg = (lat * 180 / Math.PI).toFixed(6);
+    const lonDeg = (lon * 180 / Math.PI).toFixed(6);
+  
+    // --- DIRECTLY OPEN GOOGLE MAPS ---
+    const geoUrl = `geo:${latDeg},${lonDeg}?q=${latDeg},${lonDeg}`;
+    const mapUrl = `https://www.google.com/maps?q=${latDeg},${lonDeg}`;
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  
+    window.open(isMobile ? geoUrl : mapUrl, '_blank');
+  }
+  </script>
+  
+  <div class="converter">
     <h2>Degrees to UTM(ITRF)</h2>
     <label>Latitude:</label><input type="number" id="dd_lat" step="any">
     <label>Longitude:</label><input type="number" id="dd_lon" step="any">
@@ -934,6 +1008,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+
+
+
 </div>
 <footer>
     Created by <strong>Alvin Shedrack</strong> © 2025
