@@ -103,6 +103,30 @@
       border-radius: 6px;
       font-size: 1rem;
 }
+.converter {
+  background: rgb(75, 172, 218);
+  margin-bottom: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #4B0082;
+}
+.converter h2 {
+  margin: 0;
+  padding: 15px;
+  background: #4B0082;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  user-select: none;
+}
+.converter-content {
+  display: none; /* collapsed by default */
+  padding: 15px;
+}
+.converter.active .converter-content {
+  display: block; /* expanded when active */
+}
+
 
     .result {
       margin-top: 15px;
@@ -142,11 +166,16 @@
   <h1>Coordinate Converter</h1>
 
   <div class="converter">
-    <h2>ARC1960 → Google Maps</h2>
-    <label>ARC1960 Easting (m):</label><input type="number" id="arc_to_dd_e" step="any">
-    <label>ARC1960 Northing (m):</label><input type="number" id="arc_to_dd_n" step="any">
-    <button id="arcMapBtn" onclick="arcToDD()">View in Google Maps</button>
+    <h2 onclick="toggleSection(this)">View Arc1960 in Google Maps</h2>
+    <div class="converter-content">
+      <label>ARC1960 Easting (m):</label>
+      <input type="number" id="arc_to_dd_e" step="any">
+      <label>ARC1960 Northing (m):</label>
+      <input type="number" id="arc_to_dd_n" step="any">
+      <button id="arcMapBtn" onclick="arcToDD()">View in Google Maps</button>
+    </div>
   </div>
+  
   
   <script>
   function arcToDD() {
@@ -233,18 +262,20 @@
   
   
   <div class="converter">
-    <h2>Degrees to UTM(ITRF)</h2>
-    <label>Latitude:</label><input type="number" id="dd_lat" step="any">
-    <label>Longitude:</label><input type="number" id="dd_lon" step="any">
-    <button data-action="ddToUTM()">Convert</button>
-    <button id="mapBtn" type="button" onclick="searchLocation()">View in Google Maps</button>
-    <div class="result" id="dd_to_utm_result"></div>
+    <h2 onclick="toggleSection(this)">Degrees to UTM(ITRF)</h2>
+    <div class="converter-content">
+      <label>Latitude:</label><input type="number" id="dd_lat" step="any">
+      <label>Longitude:</label><input type="number" id="dd_lon" step="any">
+      <button data-action="ddToUTM()">Convert</button>
+      <button id="mapBtn" type="button" onclick="searchLocation()">View in Google Maps</button>
+      <div class="result" id="dd_to_utm_result"></div>
       <p>Upload a CSV with Lat and Lon columns:</p>
       <input type="file" id="dd_to_utm_file" accept=".csv" />
       <button data-action="processDDtoUTM()">Convert & Download</button>
       <div class="result" id="dd_to_utm_status"></div>
-    
+    </div>
   </div>
+  
 <script>
 function searchLocation() {
     const lat = document.getElementById('dd_lat').value;
@@ -293,8 +324,9 @@ setTimeout(() => {
 </script>
 
 
-  <div class="converter">
-    <h2>UTM(ITRF) to Degrees</h2>
+<div class="converter">
+  <h2 onclick="toggleSection(this)">UTM(ITRF) to Degrees</h2>
+  <div class="converter-content">
     <label>ITRF Easting:</label><input type="number" id="utm_easting" step="any">
     <label>ITRF Northing:</label><input type="number" id="utm_northing" step="any">
     <label>Zone:</label>
@@ -302,21 +334,20 @@ setTimeout(() => {
       <option value="36">36</option>
       <option value="35">35</option>
     </select>
-
     <label>Hemisphere (N/S):</label>
     <select id="utm_hemisphere">
       <option value="N">N</option>
       <option value="S">S</option>
     </select>
-
     <button data-action="utmToDD()">Convert</button>
     <div class="result" id="utm_to_dd_result"></div>
-      <p>Upload a CSV with E and N columns:</p>
-      <input type="file" id="utm_to_dd_file" accept=".csv" />
-      <button data-action="processUTMtoDD()">Convert & Download</button>
-      <div class="result" id="utm_to_dd_status"></div>
-    
+    <p>Upload a CSV with E and N columns:</p>
+    <input type="file" id="utm_to_dd_file" accept=".csv" />
+    <button data-action="processUTMtoDD()">Convert & Download</button>
+    <div class="result" id="utm_to_dd_status"></div>
   </div>
+</div>
+
 
   <script>
     function ddToUTM() {
@@ -470,16 +501,19 @@ mapBtn.addEventListener('click', () => {
 
   
 <div class="converter">
-  <h2>ARC1960 (Zone 36N) to ITRF</h2>
-  <label>ARC1960 Easting (m):</label><input type="number" id="arc_easting" step="any">
-  <label>ARC1960 Northing (m):</label><input type="number" id="arc_northing" step="any">
-  <button data-action="convertARCtoITRF()">Convert</button>
-  <div class="result" id="arc_to_itrf_result"></div>
+  <h2 onclick="toggleSection(this)">ARC1960 (Zone 36N) to ITRF</h2>
+  <div class="converter-content">
+    <label>ARC1960 Easting (m):</label><input type="number" id="arc_easting" step="any">
+    <label>ARC1960 Northing (m):</label><input type="number" id="arc_northing" step="any">
+    <button data-action="convertARCtoITRF()">Convert</button>
+    <div class="result" id="arc_to_itrf_result"></div>
     <p>Upload a CSV with columns: E and N</p>
     <input type="file" id="arc_to_itrf_file" accept=".csv" />
     <button data-action="processARCtoITRF()">Convert & Download</button>
     <div class="result" id="arc_to_itrf_status"></div>
+  </div>
 </div>
+
 <script>
 function convertARCtoITRF() {
   const arcE = parseFloat(document.getElementById('arc_easting').value);
@@ -524,17 +558,19 @@ function convertARCtoITRF() {
 </script>
 
 <div class="converter">
-  <h2>ITRF to ARC1960 (Zone 36N)</h2>
-  <label>ITRF Easting (m):</label><input type="number" id="itrf_easting" step="any">
-  <label>ITRF Northing (m):</label><input type="number" id="itrf_northing" step="any">
-  <button data-action="convertITRFtoARC()">Convert</button>
-  <div class="result" id="itrf_to_arc_result"></div>
+  <h2 onclick="toggleSection(this)">ITRF to ARC1960 (Zone 36N)</h2>
+  <div class="converter-content">
+    <label>ITRF Easting (m):</label><input type="number" id="itrf_easting" step="any">
+    <label>ITRF Northing (m):</label><input type="number" id="itrf_northing" step="any">
+    <button data-action="convertITRFtoARC()">Convert</button>
+    <div class="result" id="itrf_to_arc_result"></div>
     <p>Upload a CSV with E and N columns:</p>
     <input type="file" id="itrf_to_arc_file" accept=".csv" />
     <button data-action="processITRFtoARC()">Convert & Download</button>
     <div class="result" id="itrf_to_arc_status"></div>
-    
+  </div>
 </div>
+
 <script>
   function convertITRFtoARC() {
   const itrfE = parseFloat(document.getElementById('itrf_easting').value);
@@ -1307,6 +1343,12 @@ function hideFeedbackIfClickedOutside(event) {
 ">
   Feedback sent successfully!
 </div>
+<script>
+  function toggleSection(header) {
+    const parent = header.parentElement;
+    parent.classList.toggle('active');
+  }
+</script>
 
 </body>
 </html>
