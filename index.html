@@ -187,7 +187,7 @@
     // --- STEP 2: ITRF (UTM Zone 36N assumed) to Lat/Lon ---
     const a = 6378137.0, f = 1/298.257223563, k0 = 0.9996, e2 = f * (2 - f);
     const x = itrfE - 500000;
-    const y = itrfN; // Assume Northern Hemisphere
+    const y = itrfN; 
     const zone = 36;
     const lambda0 = ((zone - 1) * 6 - 180 + 3) * Math.PI / 180;
   
@@ -206,14 +206,31 @@
     const latDeg = (lat * 180 / Math.PI).toFixed(6);
     const lonDeg = (lon * 180 / Math.PI).toFixed(6);
   
-    // --- DIRECTLY OPEN GOOGLE MAPS ---
+    // --- SAFE MAP OPEN LOGIC ---
     const geoUrl = `geo:${latDeg},${lonDeg}?q=${latDeg},${lonDeg}`;
     const mapUrl = `https://www.google.com/maps?q=${latDeg},${lonDeg}`;
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   
-    window.open(isMobile ? geoUrl : mapUrl, '_blank');
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
+    if (isMobile && isAndroid) {
+      // Try to open native Google Maps app
+      try {
+        window.open(geoUrl);
+      } catch {
+        window.open(mapUrl, '_blank');
+      }
+    } else if (isSafari) {
+      // Safari/iOS → always open the web URL
+      window.open(mapUrl, '_blank');
+    } else {
+      // Default fallback for desktop browsers
+      window.open(mapUrl, '_blank');
+    }
   }
   </script>
+  
   
   <div class="converter">
     <h2>Degrees to UTM(ITRF)</h2>
