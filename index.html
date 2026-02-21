@@ -1127,6 +1127,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
+<script>
+function getUserIdentity() {
+  return JSON.parse(sessionStorage.getItem("gpsUserIdentity"));
+}
+
+
+</script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll('button[data-action]');
