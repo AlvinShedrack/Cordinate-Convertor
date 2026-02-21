@@ -160,6 +160,22 @@
   </style>
 </head>
 <body>
+  <!-- User Details Modal -->
+<div id="user-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; padding:18px; border-radius:14px; width:320px; border:4px solid #2f69db;">
+    <h3 style="margin:0 0 10px; color:#03204e;">Enter Your Details</h3>
+
+    <label style="font-size:14px;">Full Name</label>
+    <input id="user-fullname" type="text" placeholder="Your name" style="width:100%; padding:10px; border-radius:10px; border:3px solid #00b609; margin-bottom:10px;" />
+
+    <label style="font-size:14px;">Email</label>
+    <input id="user-email" type="email" placeholder="example@gmail.com" style="width:100%; padding:10px; border-radius:10px; border:3px solid #00b609; margin-bottom:10px;" />
+
+    <button id="save-user-btn" class="btn green" style="width:100%;">Continue</button>
+
+    <p id="user-modal-error" style="color:red; font-size:13px; margin-top:8px;"></p>
+  </div>
+</div>
   <div id="toast">Copied to clipboard</div>
   <header>Coordinate Converter Tool</header>
   <div class="container">
@@ -1067,6 +1083,51 @@ if ('serviceWorker' in navigator) {
     Created by <strong>Alvin Shedrack</strong> © 2025
   </footer>
 <script>
+document.getElementById("save-user-btn").addEventListener("click", () => {
+  const nameInput = document.getElementById("user-fullname");
+  const emailInput = document.getElementById("user-email");
+  const error = document.getElementById("user-modal-error");
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+
+  if (!name || !email) {
+    error.textContent = "Both name and email are required.";
+    return;
+  }
+
+  const identity = {
+    name,
+    email,
+    time: new Date().toISOString()
+  };
+
+  // 🔹 session identity (used by app)
+  sessionStorage.setItem("gpsUserIdentity", JSON.stringify(identity));
+
+  // 🔹 last-used identity (used only to prefill)
+  sessionStorage.setItem("gpsUserLastIdentity", JSON.stringify(identity));
+
+  document.getElementById("user-modal").style.display = "none";
+
+
+  sendToFormspree({ message: "✅ User session started" });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("user-modal");
+  modal.style.display = "flex";
+
+  const last = sessionStorage.getItem("gpsUserLastIdentity");
+  if (last) {
+    const { name, email } = JSON.parse(last);
+    document.getElementById("user-fullname").value = name || "";
+    document.getElementById("user-email").value = email || "";
+  }
+});
+</script>
+<script>
   document.addEventListener("DOMContentLoaded", function () {
     const buttons = document.querySelectorAll('button[data-action]');
     
@@ -1393,12 +1454,55 @@ function hideFeedbackIfClickedOutside(event) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: `🔔 Section opened: ${header.textContent.trim()}`,
-          time: new Date().toISOString()
+          time: new Date().toISOString(),
+          name: identity.name,
+          email: identity.email,
         })
       });
     }
   }
   </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+  let ip = "Unknown";
+  try {
+    const res = await fetch("https://api64.ipify.org?format=json");
+    ip = (await res.json()).ip;
+  } catch (e) {}
+
+  await sendToFormspree({
+    message: "📍 Handheld GPS app opened",
+    ip,
+    platform: navigator.platform,
+    language: navigator.language
+  });
+});
+
   
+
+  // --- Optional: Notify when user leaves page ---
+  window.addEventListener("beforeunload", () => {
+    const user = JSON.parse(sessionStorage.getItem("gpsUserIdentity") || "{}");
+
+navigator.sendBeacon(
+  "https://formspree.io/f/manpjgqd",
+  JSON.stringify({
+    message: "👋 GPS app closed",
+    name: user.name,
+    email: user.email,
+    time: new Date().toISOString()
+  })
+);
+
+  });
+  </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Show user modal if identity is missing
+  if (!sessionStorage.getItem("gpsUserIdentity")) {
+    document.getElementById("user-modal").style.display = "flex";
+  }
+});
+</script>
 </body>
 </html>
