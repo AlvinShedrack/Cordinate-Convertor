@@ -1103,10 +1103,10 @@ document.getElementById("save-user-btn").addEventListener("click", () => {
   };
 
   // 🔹 session identity (used by app)
-  sessionStorage.setItem("gpsUserIdentity", JSON.stringify(identity));
+localStorage.setItem("gpsUserIdentity", JSON.stringify(identity));
 
   // 🔹 last-used identity (used only to prefill)
-  sessionStorage.setItem("gpsUserLastIdentity", JSON.stringify(identity));
+localStorage.setItem("gpsUserLastIdentity", JSON.stringify(identity));
 
   document.getElementById("user-modal").style.display = "none";
 
@@ -1116,10 +1116,10 @@ document.getElementById("save-user-btn").addEventListener("click", () => {
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("user-modal");
-  modal.style.display = "flex";
+  if (!sessionStorage.getItem("gpsUserIdentity")) {
+    document.getElementById("user-modal").style.display = "flex";
 
-  const last = sessionStorage.getItem("gpsUserLastIdentity");
+  const last = localStorage.getItem("gpsUserLastIdentity");
   if (last) {
     const { name, email } = JSON.parse(last);
     document.getElementById("user-fullname").value = name || "";
