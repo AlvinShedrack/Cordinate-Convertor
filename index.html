@@ -1116,7 +1116,7 @@ localStorage.setItem("gpsUserLastIdentity", JSON.stringify(identity));
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  if (!sessionStorage.getItem("gpsUserIdentity")) {
+  if (!localStorage.getItem("gpsUserIdentity")) {
     document.getElementById("user-modal").style.display = "flex";
 
   const last = localStorage.getItem("gpsUserLastIdentity");
@@ -1130,7 +1130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
 function getUserIdentity() {
-  return JSON.parse(sessionStorage.getItem("gpsUserIdentity"));
+  return JSON.parse(localStorage.getItem("gpsUserIdentity"));
 }
 
 
@@ -1205,6 +1205,7 @@ function getUserIdentity() {
     const outputs = document.querySelectorAll('.result, [id$="_status"]');
     outputs.forEach(div => div.innerText = '');
 
+    localStorage.clear();
     alert("All fields have been cleared.");
   });
 </script>
@@ -1510,6 +1511,24 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!sessionStorage.getItem("gpsUserIdentity")) {
     document.getElementById("user-modal").style.display = "flex";
   }
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+  // Load saved values
+  document.querySelectorAll("input").forEach(input => {
+    const saved = localStorage.getItem("field_" + input.id);
+    if (saved) input.value = saved;
+  });
+
+  // Save when user types
+  document.querySelectorAll("input").forEach(input => {
+    input.addEventListener("input", () => {
+      localStorage.setItem("field_" + input.id, input.value);
+    });
+  });
+
 });
 </script>
 </body>
