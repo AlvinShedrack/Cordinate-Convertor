@@ -1083,6 +1083,19 @@ if ('serviceWorker' in navigator) {
     Created by <strong>Alvin Shedrack</strong> © 2025
   </footer>
 <script>
+async function sendToFormspree(data) {
+  try {
+    await fetch("https://formspree.io/f/mgvzarvk", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch (err) {
+    console.warn("Send failed", err);
+  }
+}
+</script>
+<script>
 document.getElementById("save-user-btn").addEventListener("click", () => {
   const nameInput = document.getElementById("user-fullname");
   const emailInput = document.getElementById("user-email");
@@ -1418,59 +1431,28 @@ function hideFeedbackIfClickedOutside(event) {
   }
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    // Step 1: Try to get the public IP
-    let ip = "Unknown";
-    try {
-      const res = await fetch("https://api64.ipify.org?format=json");
-      const data = await res.json();
-      ip = data.ip;
-    } catch (e) {
-      console.warn("IP fetch failed", e);
-    }
-  
-    // Step 2: Collect info
-    const feedback = {
-      message: "🔔 Coordinate Converter opened",
-      ip: ip,
-      userAgent: navigator.userAgent,   // Browser + OS
-      platform: navigator.platform,     // Device type (e.g., Win32, iPhone)
-      language: navigator.language,     // Browser language
-      time: new Date().toISOString()    // Timestamp
-    };
-  
-    // Step 3: Send to Formspree
-    try {
-      await fetch("https://formspree.io/f/mgvzarvk", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(feedback)
-      });
-      console.log("✅ Open notification sent");
-    } catch (err) {
-      console.warn("❌ Failed to send notification", err);
-    }
+document.addEventListener("DOMContentLoaded", async () => {
+  let ip = "Unknown";
+
+  try {
+    const res = await fetch("https://api64.ipify.org?format=json");
+    ip = (await res.json()).ip;
+  } catch (e) {}
+
+  // 🔹 Get user identity properly
+  const user = JSON.parse(localStorage.getItem("gpsUserIdentity") || "{}");
+
+  await sendToFormspree({
+    message: "📍 App opened",
+    name: user.name || "Unknown",
+    email: user.email || "Unknown",
+    ip: ip,
+    platform: navigator.platform,
+    language: navigator.language,
+    time: new Date().toISOString()
   });
-  
-  // Extend your toggle function to also log section opens
-  function toggleSection(header) {
-    const parent = header.parentElement;
-    parent.classList.toggle('active');
-  
-    if (parent.classList.contains('active')) {
-      fetch("https://formspree.io/f/mgvzarvk", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: `🔔 Section opened: ${header.textContent.trim()}`,
-          time: new Date().toISOString(),
-          name: identity.name,
-          email: identity.email,
-        })
-      });
-    }
-  }
-  </script>
+});
+</script>
   <script>
   document.addEventListener("DOMContentLoaded", async () => {
   let ip = "Unknown";
@@ -1491,7 +1473,7 @@ function hideFeedbackIfClickedOutside(event) {
 
   // --- Optional: Notify when user leaves page ---
   window.addEventListener("beforeunload", () => {
-    const user = JSON.parse(sessionStorage.getItem("gpsUserIdentity") || "{}");
+    const user = JSON.parse(localStorage.getItem("gpsUserIdentity") || "{}");
 
 navigator.sendBeacon(
   "https://formspree.io/f/manpjgqd",
@@ -1508,7 +1490,7 @@ navigator.sendBeacon(
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   // Show user modal if identity is missing
-  if (!sessionStorage.getItem("gpsUserIdentity")) {
+  if (!localStorage.getItem("gpsUserIdentity")) {
     document.getElementById("user-modal").style.display = "flex";
   }
 });
