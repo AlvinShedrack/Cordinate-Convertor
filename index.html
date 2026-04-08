@@ -1232,7 +1232,11 @@ function getUserIdentity() {
     const outputs = document.querySelectorAll('.result, [id$="_status"]');
     outputs.forEach(div => div.innerText = '');
 
-    localStorage.clear();
+    Object.keys(localStorage).forEach(key => {
+  if (key.startsWith("field_")) {
+    localStorage.removeItem(key);
+  }
+});
     alert("All fields have been cleared.");
   });
 </script>
@@ -1498,7 +1502,16 @@ navigator.sendBeacon(
   </script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // Show user modal if identity is missing
+  const last = localStorage.getItem("gpsUserLastIdentity");
+
+  if (last) {
+    const { name, email } = JSON.parse(last);
+
+    document.getElementById("user-fullname").value = name || "";
+    document.getElementById("user-email").value = email || "";
+  }
+
+  // Only show modal if no active session
   if (!localStorage.getItem("gpsUserIdentity")) {
     document.getElementById("user-modal").style.display = "flex";
   }
@@ -1520,6 +1533,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const splash = document.getElementById("splash-modal");
+  const bar = document.getElementById("splash-bar");
+
+  let progress = 0;
+
+  const interval = setInterval(() => {
+    progress += 10;
+    bar.style.width = progress + "%";
+
+    if (progress >= 100) {
+      clearInterval(interval);
+
+      // Smooth fade out
+      splash.style.transition = "opacity 0.5s ease";
+      splash.style.opacity = "0";
+
+      setTimeout(() => {
+        splash.style.display = "none";
+      }, 500);
+    }
+  }, 200); // total ≈ 2 seconds
 });
 </script>
 </body>
