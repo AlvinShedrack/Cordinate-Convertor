@@ -1173,7 +1173,16 @@ localStorage.setItem("gpsUserLastIdentity", JSON.stringify(identity));
   document.getElementById("user-modal").style.display = "none";
 
 
-  sendToFormspree({ message: "✅ User session started" });
+  sendToFormspree({ 
+    message: "📍 App opened",
+    name: user.name || "Unknown",
+    email: user.email || "Unknown",
+    ip: ip,
+    platform: navigator.platform,
+    language: navigator.language,
+    device:  getDeviceModel(),
+    time: new Date().toISOString()
+  });
 });
 </script>
 <script>
