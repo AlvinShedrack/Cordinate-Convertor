@@ -49,8 +49,8 @@
       display: block;
     }
     input[type="number"], input[type="text"] {
-      width: 100%;
-      padding: 10px;
+      width: 75%;
+      padding: 8px;
       margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -474,6 +474,13 @@ body.dark-mode .shortcut-key {
 }
 .undo-redo-btn:hover:not(:disabled) {
   background: #5a6268;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  input[type="number"], input[type="text"] {
+    width: 100%;
+  }
 }
 
   </style>
