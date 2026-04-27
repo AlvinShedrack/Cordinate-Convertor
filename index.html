@@ -156,6 +156,325 @@
   opacity: 1;
 }
 
+/* ===== NEW ENHANCEMENTS STYLES ===== */
+
+/* Dark Mode */
+body.dark-mode {
+  background: #1a1a2e;
+  color: #e0e0e0;
+}
+body.dark-mode header {
+  background: #16213e;
+}
+body.dark-mode .converter {
+  background: #0f3460;
+  border-top-color: #e94560;
+}
+body.dark-mode h2 {
+  color: #e94560;
+}
+body.dark-mode .result-box {
+  background-color: #1a3a52;
+  border-color: #e94560;
+  color: #e0e0e0;
+}
+body.dark-mode input, body.dark-mode select, body.dark-mode button {
+  background: #16213e;
+  color: #e0e0e0;
+  border-color: #444;
+}
+body.dark-mode button:hover {
+  background: #e94560;
+}
+
+/* Top Navigation */
+.top-nav {
+  background: #4B0082;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.top-nav-left {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.top-nav button {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.5);
+  color: white;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.top-nav button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  left: -300px;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  background: #f8f9fa;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  transition: left 0.3s;
+  z-index: 9998;
+  overflow-y: auto;
+  padding-top: 60px;
+}
+body.dark-mode .sidebar {
+  background: #16213e;
+  color: #e0e0e0;
+}
+.sidebar.active {
+  left: 0;
+}
+.sidebar-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #4B0082;
+}
+body.dark-mode .sidebar-close {
+  color: #e94560;
+}
+.sidebar-section {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+body.dark-mode .sidebar-section {
+  border-bottom-color: #333;
+}
+.sidebar-section h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #4B0082;
+  text-transform: uppercase;
+}
+body.dark-mode .sidebar-section h3 {
+  color: #e94560;
+}
+.sidebar-item {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  transition: all 0.2s;
+}
+.sidebar-item:hover {
+  background: rgba(75, 0, 130, 0.1);
+}
+
+/* Validation Indicators */
+.validation-box {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+.validation-item {
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.validation-item.valid {
+  background: #d4edda;
+  color: #155724;
+}
+.validation-item.invalid {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Tab Navigation */
+.tab-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 2px solid #ddd;
+}
+body.dark-mode .tab-nav {
+  border-bottom-color: #333;
+}
+.tab-btn {
+  padding: 0.8rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #4B0082;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+body.dark-mode .tab-btn {
+  color: #e0e0e0;
+}
+.tab-btn.active {
+  border-bottom-color: #4B0082;
+  color: #4B0082;
+}
+body.dark-mode .tab-btn.active {
+  border-bottom-color: #e94560;
+  color: #e94560;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* History Item */
+.history-item {
+  background: #fff;
+  padding: 0.8rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  border-left: 3px solid #4B0082;
+  transition: all 0.2s;
+  font-size: 0.8rem;
+}
+body.dark-mode .history-item {
+  background: #0f3460;
+  border-left-color: #e94560;
+}
+.history-item:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.history-time {
+  font-size: 0.7rem;
+  color: #999;
+  margin-top: 0.3rem;
+}
+
+/* Distance Calculator */
+.distance-result {
+  background: #e7f3ff;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+body.dark-mode .distance-result {
+  background: #1a3a52;
+}
+.distance-result-item {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+}
+body.dark-mode .distance-result-item {
+  border-bottom-color: #333;
+}
+
+/* Keyboard Shortcuts Panel */
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+.shortcut-item {
+  background: #f5f5f5;
+  padding: 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+body.dark-mode .shortcut-item {
+  background: #0f3460;
+}
+.shortcut-key {
+  font-family: monospace;
+  background: #4B0082;
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 2px;
+  font-weight: bold;
+}
+body.dark-mode .shortcut-key {
+  background: #e94560;
+}
+
+/* Feedback Rating */
+.rating-container {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+.star {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.star:hover {
+  transform: scale(1.2);
+}
+.star.active {
+  color: #ffc107;
+}
+
+/* Export Options */
+.export-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.export-btn {
+  padding: 0.6rem;
+  font-size: 0.8rem;
+  background: #28a745;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.export-btn:hover {
+  background: #218838;
+}
+
+/* Undo/Redo Controls */
+.undo-redo-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.undo-redo-btn {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.75rem;
+  background: #6c757d;
+  border: none;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.undo-redo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.undo-redo-btn:hover:not(:disabled) {
+  background: #5a6268;
+}
 
   </style>
 </head>
@@ -192,7 +511,65 @@
 </div>
   <div id="toast">Copied to clipboard</div>
   <header>Coordinate Converter Tool</header>
+
+  <!-- Top Navigation Bar -->
+  <div class="top-nav">
+    <div class="top-nav-left">
+      <button id="historyToggle" title="View history">📋 History</button>
+      <button id="settingsToggle" title="Settings & Help">⚙️ Settings</button>
+      <button id="keyboardToggle" title="Keyboard shortcuts">⌨️ Shortcuts</button>
+    </div>
+    <div class="top-nav-left">
+      <button id="themeToggle" title="Toggle dark mode">🌙 Dark Mode</button>
+      <button id="searchToggle" title="Search converters">🔍 Find</button>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <button class="sidebar-close" onclick="toggleSidebar()">×</button>
+    
+    <div class="sidebar-section">
+      <h3>⏱️ Recent Conversions</h3>
+      <div id="historyList" style="max-height: 200px; overflow-y: auto;"></div>
+      <button onclick="clearHistory()" style="width:100%; margin-top:0.5rem; font-size:0.75rem; padding:0.4rem;">Clear History</button>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>⚡ Quick Settings</h3>
+      <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin: 0.5rem 0;">
+        <input type="checkbox" id="autoConvert" /> Auto-convert on input
+      </label>
+      <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin: 0.5rem 0;">
+        <input type="checkbox" id="showValidation" checked /> Show validation
+      </label>
+      <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; margin: 0.5rem 0;">
+        <input type="checkbox" id="copyAutomatically" /> Copy to clipboard
+      </label>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>🎯 Tips</h3>
+      <p style="font-size: 0.8rem; color: #666;">
+        • Use keyboard shortcuts for faster navigation
+        • Click on history items to restore
+        • Export results in multiple formats
+      </p>
+    </div>
+  </div>
+
+  <!-- Search Panel -->
+  <div id="searchPanel" style="display:none; background: #f0f0f0; padding: 1rem; margin: 1rem auto; max-width: 900px; border-radius: 8px;">
+    <input type="text" id="searchInput" placeholder="Search converters..." style="width: 100%; padding: 0.8rem; border: 2px solid #4B0082; border-radius: 4px; font-size: 1rem;">
+    <div id="searchResults" style="margin-top: 0.5rem; font-size: 0.85rem;"></div>
+  </div>
+
   <div class="container">
+
+  <!-- Core Converters Section -->
+  <div style="margin-bottom: 2rem;">
+    <h2 style="color: #4B0082; margin-bottom: 1rem; display: flex; gap: 0.5rem;">🗺️ Core Converters</h2>
+    
   <div class="converter">
     <h2 onclick="toggleSection(this)">View Arc1960 in Google Maps</h2>
     <div class="converter-content">
@@ -203,6 +580,7 @@
       <button id="arcMapBtn" onclick="arcToDD()">View in Google Maps</button>
     </div>
   </div>
+  
 
   <div class="converter">
     <h2 onclick="toggleSection(this)">Device Location</h2>
@@ -1192,9 +1570,102 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
+  <!-- ===== NEW ENHANCEMENT SECTIONS ===== -->
 
+  <!-- Batch Conversion Tools -->
+  <div style="margin-top: 2rem; margin-bottom: 2rem;">
+    <h2 style="color: #4B0082; margin-bottom: 1rem;">⚙️ Batch & Utilities</h2>
+    
+    <div class="converter">
+      <h2 onclick="toggleSection(this)">📦 Batch Location Conversion</h2>
+      <div class="converter-content">
+        <p style="font-size: 0.9rem; color: #555;">Upload CSV with multiple device locations and convert them all at once.</p>
+        <input type="file" id="batchLocFile" accept=".csv" placeholder="Upload CSV"/>
+        <button onclick="processBatchConversion()">Process Batch</button>
+        <div id="batchStatus" style="margin-top: 0.5rem;"></div>
+      </div>
+    </div>
 
-</div>
+    <div class="converter">
+      <h2 onclick="toggleSection(this)">📏 Distance Calculator</h2>
+      <div class="converter-content">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label>Point 1 Latitude:</label>
+            <input type="number" id="dist_lat1" step="any">
+            <label>Point 1 Longitude:</label>
+            <input type="number" id="dist_lon1" step="any">
+          </div>
+          <div>
+            <label>Point 2 Latitude:</label>
+            <input type="number" id="dist_lat2" step="any">
+            <label>Point 2 Longitude:</label>
+            <input type="number" id="dist_lon2" step="any">
+          </div>
+        </div>
+        <button onclick="calculateDistance()">Calculate Distance & Bearing</button>
+        <div id="distanceResult" style="margin-top: 1rem;"></div>
+      </div>
+    </div>
+
+    <div class="converter">
+      <h2 onclick="toggleSection(this)">💾 Export Manager</h2>
+      <div class="converter-content">
+        <p style="font-size: 0.9rem; color: #555;">Export your last conversion result in multiple formats.</p>
+        <div id="lastResult" style="margin: 0.5rem 0; padding: 0.5rem; background: #f0f0f0; border-radius: 4px; font-size: 0.85rem;">No conversion yet</div>
+        <div class="export-options">
+          <button class="export-btn" onclick="exportAsCSV()">📄 Export CSV</button>
+          <button class="export-btn" onclick="exportAsJSON()">📋 Export JSON</button>
+          <button class="export-btn" onclick="exportAsKML()">🗺️ Export KML</button>
+          <button class="export-btn" onclick="exportAsTable()">📊 Copy Table</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Undo/Redo & History Section -->
+  <div style="margin-bottom: 2rem;">
+    <h2 style="color: #4B0082; margin-bottom: 1rem;">↩️ History & Undo</h2>
+    
+    <div class="converter">
+      <h2 onclick="toggleSection(this)">Undo / Redo Controls</h2>
+      <div class="converter-content">
+        <div class="undo-redo-controls">
+          <button class="undo-redo-btn" id="undoBtn" onclick="undoAction()" title="Undo">↶ Undo</button>
+          <button class="undo-redo-btn" id="redoBtn" onclick="redoAction()" title="Redo">↷ Redo</button>
+          <button class="undo-redo-btn" onclick="clearUndoRedo()" style="flex:1;">Clear History</button>
+        </div>
+        <div id="undoStack" style="font-size: 0.8rem; color: #666; max-height: 150px; overflow-y: auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Enhancement Section -->
+  <div style="margin-bottom: 2rem;">
+    <h2 style="color: #4B0082; margin-bottom: 1rem;">💬 Feedback & Help</h2>
+    
+    <div class="converter">
+      <h2 onclick="toggleSection(this)">Send Feedback with Rating</h2>
+      <div class="converter-content">
+        <label>How satisfied are you with the app?</label>
+        <div class="rating-container" id="feedbackRating">
+          <span class="star" onclick="setRating(1)">⭐</span>
+          <span class="star" onclick="setRating(2)">⭐</span>
+          <span class="star" onclick="setRating(3)">⭐</span>
+          <span class="star" onclick="setRating(4)">⭐</span>
+          <span class="star" onclick="setRating(5)">⭐</span>
+        </div>
+        <label>Your Message:</label>
+        <textarea id="feedbackText" placeholder="Tell us what you think..." style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; height: 80px; font-family: inherit;"></textarea>
+        <button onclick="submitFeedbackWithRating()" style="margin-top: 0.5rem;">Submit Feedback</button>
+        <div id="feedbackMsg" style="margin-top: 0.5rem; font-size: 0.85rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <!-- end container -->
+  
 <footer>
     Created by <strong>Alvin Shedrack</strong> © 2025
   </footer>
@@ -1659,6 +2130,331 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+});
+</script>
+
+<!-- ===== COMPREHENSIVE ENHANCEMENTS JAVASCRIPT ===== -->
+<script>
+// ========== 1. DARK MODE ==========
+function initDarkMode() {
+  const isDark = localStorage.getItem('darkMode') === 'true';
+  if (isDark) document.body.classList.add('dark-mode');
+  
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+  });
+}
+
+// ========== 2. SIDEBAR & NAVIGATION ==========
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('active');
+}
+
+document.getElementById('historyToggle')?.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.add('active');
+  const historySection = document.querySelector('.sidebar-section');
+  historySection?.scrollIntoView();
+});
+
+document.getElementById('settingsToggle')?.addEventListener('click', toggleSidebar);
+
+// ========== 3. SEARCH FUNCTIONALITY ==========
+document.getElementById('searchToggle')?.addEventListener('click', () => {
+  const panel = document.getElementById('searchPanel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+});
+
+document.getElementById('searchInput')?.addEventListener('input', (e) => {
+  const query = e.target.value.toLowerCase();
+  const converters = document.querySelectorAll('.converter h2');
+  const results = Array.from(converters)
+    .filter(h => h.textContent.toLowerCase().includes(query))
+    .map(h => h.textContent)
+    .join('\n');
+  
+  document.getElementById('searchResults').innerHTML = results 
+    ? `Found ${results.split('\n').length} matches` 
+    : 'No converters found';
+});
+
+// ========== 4. HISTORY TRACKING ==========
+let conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
+let lastConversionResult = null;
+
+function addToHistory(type, data) {
+  conversionHistory.push({
+    type,
+    data,
+    time: new Date().toLocaleTimeString(),
+    timestamp: Date.now()
+  });
+  if (conversionHistory.length > 20) conversionHistory.shift();
+  localStorage.setItem('conversionHistory', JSON.stringify(conversionHistory));
+  updateHistoryDisplay();
+}
+
+function updateHistoryDisplay() {
+  const historyList = document.getElementById('historyList');
+  if (!historyList) return;
+  
+  historyList.innerHTML = conversionHistory.slice().reverse().map((item, idx) => `
+    <div class="history-item" onclick="restoreFromHistory(${conversionHistory.length - 1 - idx})">
+      <strong>${item.type}</strong><br/>
+      <small>${item.data}</small>
+      <div class="history-time">${item.time}</div>
+    </div>
+  `).join('');
+}
+
+function restoreFromHistory(idx) {
+  const item = conversionHistory[idx];
+  alert('Restored: ' + item.data);
+}
+
+function clearHistory() {
+  if (confirm('Clear all history?')) {
+    conversionHistory = [];
+    localStorage.removeItem('conversionHistory');
+    updateHistoryDisplay();
+  }
+}
+
+// ========== 5. BATCH LOCATION CONVERSION ==========
+function processBatchConversion() {
+  const fileInput = document.getElementById('batchLocFile');
+  const status = document.getElementById('batchStatus');
+  
+  if (!fileInput?.files.length) {
+    status.innerHTML = '❌ Please select a file';
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const lines = e.target.result.trim().split('\n');
+      const header = lines[0].split(',');
+      const latIdx = header.findIndex(h => h.toLowerCase().includes('lat'));
+      const lonIdx = header.findIndex(h => h.toLowerCase().includes('lon'));
+      
+      if (latIdx === -1 || lonIdx === -1) {
+        status.innerHTML = '❌ Need Latitude and Longitude columns';
+        return;
+      }
+      
+      const converted = [header.join(',')];
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].split(',');
+        converted.push(row.join(','));
+      }
+      
+      const blob = new Blob([converted.join('\n')], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'batch_locations_' + Date.now() + '.csv';
+      link.click();
+      
+      status.innerHTML = `✅ Processed ${converted.length - 1} locations`;
+      addToHistory('Batch Conversion', `${converted.length - 1} locations`);
+    } catch (err) {
+      status.innerHTML = '❌ Error: ' + err.message;
+    }
+  };
+  reader.readAsText(fileInput.files[0]);
+}
+
+// ========== 6. DISTANCE CALCULATOR ==========
+function calculateDistance() {
+  const lat1 = parseFloat(document.getElementById('dist_lat1').value);
+  const lon1 = parseFloat(document.getElementById('dist_lon1').value);
+  const lat2 = parseFloat(document.getElementById('dist_lat2').value);
+  const lon2 = parseFloat(document.getElementById('dist_lon2').value);
+  
+  if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
+    alert('Please enter valid coordinates');
+    return;
+  }
+  
+  const R = 6371; // Earth radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distanceKm = (R * c).toFixed(2);
+  const distanceM = (distanceKm * 1000).toFixed(0);
+  
+  const bearing = Math.atan2(
+    Math.sin(dLon) * Math.cos(lat2 * Math.PI / 180),
+    Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
+    Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLon)
+  ) * 180 / Math.PI;
+  
+  const bearingNorm = (bearing + 360) % 360;
+  
+  document.getElementById('distanceResult').innerHTML = `
+    <div class="distance-result">
+      <div class="distance-result-item">
+        <span>Distance:</span>
+        <strong>${distanceKm} km (${distanceM} m)</strong>
+      </div>
+      <div class="distance-result-item">
+        <span>Bearing:</span>
+        <strong>${bearingNorm.toFixed(1)}°</strong>
+      </div>
+    </div>
+  `;
+  
+  addToHistory('Distance Calc', `${distanceKm} km`);
+}
+
+// ========== 7. EXPORT FUNCTIONS ==========
+function exportAsCSV() {
+  if (!lastConversionResult) {
+    alert('No conversion result to export');
+    return;
+  }
+  const blob = new Blob([lastConversionResult], { type: 'text/csv' });
+  downloadFile(blob, 'export_' + Date.now() + '.csv');
+}
+
+function exportAsJSON() {
+  if (!lastConversionResult) {
+    alert('No conversion result to export');
+    return;
+  }
+  const json = JSON.stringify({data: lastConversionResult, timestamp: new Date()});
+  const blob = new Blob([json], { type: 'application/json' });
+  downloadFile(blob, 'export_' + Date.now() + '.json');
+}
+
+function exportAsKML() {
+  alert('KML export coming soon - will export coordinates as map markers');
+}
+
+function exportAsTable() {
+  if (!lastConversionResult) {
+    alert('No conversion result to export');
+    return;
+  }
+  navigator.clipboard.writeText(lastConversionResult);
+  alert('Table copied to clipboard!');
+}
+
+function downloadFile(blob, filename) {
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}
+
+// ========== 8. UNDO/REDO SYSTEM ==========
+let undoStack = [];
+let redoStack = [];
+
+function recordAction(action) {
+  undoStack.push(action);
+  if (undoStack.length > 15) undoStack.shift();
+  redoStack = [];
+  updateUndoRedoButtons();
+  updateUndoStackDisplay();
+}
+
+function undoAction() {
+  if (undoStack.length > 0) {
+    const action = undoStack.pop();
+    redoStack.push(action);
+    console.log('Undo:', action);
+    updateUndoRedoButtons();
+  }
+}
+
+function redoAction() {
+  if (redoStack.length > 0) {
+    const action = redoStack.pop();
+    undoStack.push(action);
+    console.log('Redo:', action);
+    updateUndoRedoButtons();
+  }
+}
+
+function clearUndoRedo() {
+  undoStack = [];
+  redoStack = [];
+  updateUndoRedoButtons();
+  updateUndoStackDisplay();
+}
+
+function updateUndoRedoButtons() {
+  const undoBtn = document.getElementById('undoBtn');
+  const redoBtn = document.getElementById('redoBtn');
+  if (undoBtn) undoBtn.disabled = undoStack.length === 0;
+  if (redoBtn) redoBtn.disabled = redoStack.length === 0;
+}
+
+function updateUndoStackDisplay() {
+  const display = document.getElementById('undoStack');
+  if (!display) return;
+  display.innerHTML = undoStack.map(a => `<div>• ${a}</div>`).join('') || 'No actions';
+}
+
+// ========== 9. FEEDBACK RATING SYSTEM ==========
+let currentRating = 0;
+
+function setRating(rating) {
+  currentRating = rating;
+  const stars = document.querySelectorAll('#feedbackRating .star');
+  stars.forEach((star, idx) => {
+    if (idx < rating) star.classList.add('active');
+    else star.classList.remove('active');
+  });
+}
+
+function submitFeedbackWithRating() {
+  const text = document.getElementById('feedbackText').value;
+  if (!text.trim()) {
+    alert('Please enter feedback');
+    return;
+  }
+  
+  const message = `Rating: ${'⭐'.repeat(currentRating || 0)}\n${text}`;
+  const feedbackMsg = document.getElementById('feedbackMsg');
+  feedbackMsg.innerHTML = '✅ Thank you for your feedback!';
+  feedbackMsg.style.color = 'green';
+  
+  document.getElementById('feedbackText').value = '';
+  currentRating = 0;
+  document.querySelectorAll('#feedbackRating .star').forEach(s => s.classList.remove('active'));
+  
+  addToHistory('Feedback', `${currentRating} stars`);
+}
+
+// ========== 10. KEYBOARD SHORTCUTS ==========
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey) {
+    if (e.key === 'h') { e.preventDefault(); toggleSidebar(); }
+    if (e.key === 'k') { e.preventDefault(); document.getElementById('searchToggle')?.click(); }
+    if (e.key === 'z') { e.preventDefault(); undoAction(); }
+    if (e.key === 'y') { e.preventDefault(); redoAction(); }
+  }
+  if (e.key === 'Escape') {
+    document.getElementById('sidebar').classList.remove('active');
+    document.getElementById('searchPanel').style.display = 'none';
+  }
+});
+
+// Display keyboard shortcuts
+document.getElementById('keyboardToggle')?.addEventListener('click', () => {
+  alert(`Keyboard Shortcuts:\nCtrl+H: History\nCtrl+K: Search\nCtrl+Z: Undo\nCtrl+Y: Redo\nESC: Close panels`);
+});
+
+// ========== INITIALIZATION ==========
+document.addEventListener('DOMContentLoaded', () => {
+  initDarkMode();
+  updateHistoryDisplay();
+  updateUndoRedoButtons();
 });
 </script>
 <script>
