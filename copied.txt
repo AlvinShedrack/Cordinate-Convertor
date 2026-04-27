@@ -1,0 +1,23 @@
+
+  <!-- Feedback Enhancement Section -->
+  <div style="margin-bottom: 2rem;">
+    <h2 style="color: #4B0082; margin-bottom: 1rem;">💬 Feedback & Help</h2>
+    
+    <div class="converter">
+      <h2 onclick="toggleSection(this)">Send Feedback with Rating</h2>
+      <div class="converter-content">
+        <label>How satisfied are you with the app?</label>
+        <div class="rating-container" id="feedbackRating">
+          <span class="star" onclick="setRating(1)">⭐</span>
+          <span class="star" onclick="setRating(2)">⭐</span>
+          <span class="star" onclick="setRating(3)">⭐</span>
+          <span class="star" onclick="setRating(4)">⭐</span>
+          <span class="star" onclick="setRating(5)">⭐</span>
+        </div>
+        <label>Your Message:</label>
+        <textarea id="feedbackText" placeholder="Tell us what you think..." style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; height: 80px; font-family: inherit;"></textarea>
+        <button onclick="submitFeedbackWithRating()" style="margin-top: 0.5rem;">Submit Feedback</button>
+        <div id="feedbackMsg" style="margin-top: 0.5rem; font-size: 0.85rem;"></div>
+      </div>
+    </div>
+  </div>
