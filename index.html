@@ -33,11 +33,11 @@
     }
     .converter {
       background: rgb(75, 172, 218);
-      padding: 25px;
-      margin-bottom: 30px;
+      padding: 5px;
+      margin-bottom: 10px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-top: 4px solid #4B0082;
+      border-top: 8px solid #4B0082;
     }
     h2 {
       color: #4B0082;
@@ -560,8 +560,8 @@ body.dark-mode .shortcut-key {
 
   <!-- Search Panel -->
   <div id="searchPanel" style="display:none; background: #f0f0f0; padding: 1rem; margin: 1rem auto; max-width: 900px; border-radius: 8px;">
-    <input type="text" id="searchInput" placeholder="Search converters..." style="width: 100%; padding: 0.8rem; border: 2px solid #4B0082; border-radius: 4px; font-size: 1rem;">
-    <div id="searchResults" style="margin-top: 0.5rem; font-size: 0.85rem;"></div>
+    <input type="text" id="searchInput" placeholder="Search converters... (e.g., 'distance', 'arc', 'device')" style="width: 100%; padding: 0.8rem; border: 2px solid #4B0082; border-radius: 4px; font-size: 1rem;">
+    <div id="searchResults" style="margin-top: 0.8rem; font-size: 0.85rem; display: grid; gap: 0.5rem;"></div>
   </div>
 
   <div class="container">
@@ -1589,7 +1589,12 @@ if ('serviceWorker' in navigator) {
     <div class="converter">
       <h2 onclick="toggleSection(this)">📏 Distance Calculator</h2>
       <div class="converter-content">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <label style="font-size: 0.9rem; margin-bottom: 1rem;">
+          <input type="radio" name="distMode" value="latlon" checked onchange="switchDistMode('latlon')"> Latitude/Longitude
+          <input type="radio" name="distMode" value="utm" onchange="switchDistMode('utm')"> UTM (Easting/Northing)
+        </label>
+        
+        <div id="latLonMode" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
           <div>
             <label>Point 1 Latitude:</label>
             <input type="number" id="dist_lat1" step="any">
@@ -1603,6 +1608,32 @@ if ('serviceWorker' in navigator) {
             <input type="number" id="dist_lon2" step="any">
           </div>
         </div>
+        
+        <div id="utmMode" style="display: none; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label>Point 1 Easting (m):</label>
+            <input type="number" id="dist_e1" step="any">
+            <label>Point 1 Northing (m):</label>
+            <input type="number" id="dist_n1" step="any">
+            <label>Point 1 Zone:</label>
+            <select id="dist_zone1">
+              <option value="35">35</option>
+              <option value="36" selected>36</option>
+            </select>
+          </div>
+          <div>
+            <label>Point 2 Easting (m):</label>
+            <input type="number" id="dist_e2" step="any">
+            <label>Point 2 Northing (m):</label>
+            <input type="number" id="dist_n2" step="any">
+            <label>Point 2 Zone:</label>
+            <select id="dist_zone2">
+              <option value="35">35</option>
+              <option value="36" selected>36</option>
+            </select>
+          </div>
+        </div>
+        
         <button onclick="calculateDistance()">Calculate Distance & Bearing</button>
         <div id="distanceResult" style="margin-top: 1rem;"></div>
       </div>
@@ -2168,15 +2199,37 @@ document.getElementById('searchToggle')?.addEventListener('click', () => {
 document.getElementById('searchInput')?.addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase();
   const converters = document.querySelectorAll('.converter h2');
-  const results = Array.from(converters)
-    .filter(h => h.textContent.toLowerCase().includes(query))
-    .map(h => h.textContent)
-    .join('\n');
+  const matches = Array.from(converters)
+    .filter(h => h.textContent.toLowerCase().includes(query) && h.onclick)
+    .map(h => h.textContent);
   
-  document.getElementById('searchResults').innerHTML = results 
-    ? `Found ${results.split('\n').length} matches` 
-    : 'No converters found';
+  const resultsDiv = document.getElementById('searchResults');
+  if (!query) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+  
+  if (matches.length === 0) {
+    resultsDiv.innerHTML = '<div style="color: #999; padding: 0.5rem;">No converters found</div>';
+    return;
+  }
+  
+  resultsDiv.innerHTML = matches.map(text => `
+    <div onclick="searchJumpTo('${text}')\" style=\"background: white; padding: 0.8rem; border-radius: 4px; cursor: pointer; border-left: 3px solid #4B0082; transition: all 0.2s; user-select: none;\" onmouseover=\"this.style.background='#e8f4ff'\" onmouseout=\"this.style.background='white'\">\
+      <strong>${text}</strong><br/>\
+      <small style=\"color: #666;\">Click to jump</small>\
+    </div>\
+  `).join('');
 });
+
+function searchJumpTo(text) {
+  const h2 = Array.from(document.querySelectorAll('.converter h2')).find(h => h.textContent === text);
+  if (h2) {
+    h2.click(); // Expand the section
+    h2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('searchPanel').style.display = 'none';
+  }
+}
 
 // ========== 4. HISTORY TRACKING ==========
 let conversionHistory = JSON.parse(localStorage.getItem('conversionHistory')) || [];
@@ -2265,15 +2318,71 @@ function processBatchConversion() {
 }
 
 // ========== 6. DISTANCE CALCULATOR ==========
-function calculateDistance() {
-  const lat1 = parseFloat(document.getElementById('dist_lat1').value);
-  const lon1 = parseFloat(document.getElementById('dist_lon1').value);
-  const lat2 = parseFloat(document.getElementById('dist_lat2').value);
-  const lon2 = parseFloat(document.getElementById('dist_lon2').value);
+function switchDistMode(mode) {
+  document.getElementById('latLonMode').style.display = mode === 'latlon' ? 'grid' : 'none';
+  document.getElementById('utmMode').style.display = mode === 'utm' ? 'grid' : 'none';
+}
+
+function utm2LatLon(easting, northing, zone) {
+  const k0 = 0.9996;
+  const a = 6378137.0;
+  const f = 1 / 298.257223563;
+  const e = Math.sqrt(f * (2 - f));
   
-  if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
-    alert('Please enter valid coordinates');
-    return;
+  const x = easting - 500000;
+  const y = northing;
+  
+  const lambda0 = ((zone - 1) * 6 - 180 + 3) * Math.PI / 180;
+  const m = y / k0;
+  const mu = m / (a * (1 - Math.pow(e, 2)/4 - 3*Math.pow(e, 4)/64));
+  const e1 = (1 - Math.sqrt(1 - Math.pow(e, 2))) / (1 + Math.sqrt(1 - Math.pow(e, 2)));
+  const phi1 = mu + (3*e1/2 - 27*Math.pow(e1,3)/32)*Math.sin(2*mu);
+  const n1 = a / Math.sqrt(1 - Math.pow(e * Math.sin(phi1), 2));
+  const r1 = a * (1 - Math.pow(e, 2)) / Math.pow(1 - Math.pow(e * Math.sin(phi1), 2), 1.5);
+  const d = x / (n1 * k0);
+  
+  const lat = phi1 - (n1 * Math.tan(phi1) / r1) * (d*d/2);
+  const lon = lambda0 + (d - d**3/6) / Math.cos(phi1);
+  
+  return {
+    lat: (lat * 180 / Math.PI).toFixed(6),
+    lon: (lon * 180 / Math.PI).toFixed(6)
+  };
+}
+
+function calculateDistance() {
+  let lat1, lon1, lat2, lon2;
+  const mode = document.querySelector('input[name="distMode"]:checked').value;
+  
+  if (mode === 'utm') {
+    const e1 = parseFloat(document.getElementById('dist_e1').value);
+    const n1 = parseFloat(document.getElementById('dist_n1').value);
+    const z1 = parseInt(document.getElementById('dist_zone1').value);
+    const e2 = parseFloat(document.getElementById('dist_e2').value);
+    const n2 = parseFloat(document.getElementById('dist_n2').value);
+    const z2 = parseInt(document.getElementById('dist_zone2').value);
+    
+    if (isNaN(e1) || isNaN(n1) || isNaN(e2) || isNaN(n2)) {
+      alert('Please enter valid UTM coordinates');
+      return;
+    }
+    
+    const p1 = utm2LatLon(e1, n1, z1);
+    const p2 = utm2LatLon(e2, n2, z2);
+    lat1 = parseFloat(p1.lat);
+    lon1 = parseFloat(p1.lon);
+    lat2 = parseFloat(p2.lat);
+    lon2 = parseFloat(p2.lon);
+  } else {
+    lat1 = parseFloat(document.getElementById('dist_lat1').value);
+    lon1 = parseFloat(document.getElementById('dist_lon1').value);
+    lat2 = parseFloat(document.getElementById('dist_lat2').value);
+    lon2 = parseFloat(document.getElementById('dist_lon2').value);
+    
+    if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) {
+      alert('Please enter valid coordinates');
+      return;
+    }
   }
   
   const R = 6371; // Earth radius in km
@@ -2297,17 +2406,25 @@ function calculateDistance() {
   document.getElementById('distanceResult').innerHTML = `
     <div class="distance-result">
       <div class="distance-result-item">
-        <span>Distance:</span>
+        <span>📍 Point 1:</span>
+        <small>${lat1.toFixed(6)}, ${lon1.toFixed(6)}</small>
+      </div>
+      <div class="distance-result-item">
+        <span>📍 Point 2:</span>
+        <small>${lat2.toFixed(6)}, ${lon2.toFixed(6)}</small>
+      </div>
+      <div class="distance-result-item">
+        <span>📏 Distance:</span>
         <strong>${distanceKm} km (${distanceM} m)</strong>
       </div>
       <div class="distance-result-item">
-        <span>Bearing:</span>
+        <span>🧭 Bearing:</span>
         <strong>${bearingNorm.toFixed(1)}°</strong>
       </div>
     </div>
   `;
   
-  addToHistory('Distance Calc', `${distanceKm} km`);
+  addToHistory('Distance', `${distanceKm}km`);
 }
 
 // ========== 7. EXPORT FUNCTIONS ==========
