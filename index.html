@@ -568,9 +568,21 @@ body.dark-mode .shortcut-key {
 
   <!-- Core Converters Section -->
   <div style="margin-bottom: 2rem;">
+        <div class="converter">
+    <h2 onclick="toggleSection(this)">Your Location</h2>
+    <div class="converter-content">
+      <button type="button" id="locateBtn" onclick="fetchDeviceLocation()">Get device location</button>
+      <div class="result-box" id="deviceLocationBox" style="display:none; margin-top: 12px;">
+        <p><strong>Latitude:</strong> <span id="deviceLat">—</span></p>
+        <p><strong>Longitude:</strong> <span id="deviceLon">—</span></p>
+        <p><strong>Maps:</strong> <a id="deviceMapsLink" href="#" target="_blank" rel="noopener">Tap to open</a></p>
+      </div>
+    </div>
+  </div>
     <h2 style="color: #4B0082; margin-bottom: 1rem; display: flex; gap: 0.5rem;">🗺️ Core Converters</h2>
     
-  <div class="converter">
+
+    <div class="converter">
     <h2 onclick="toggleSection(this)">View Arc1960 in Google Maps</h2>
     <div class="converter-content">
       <label>ARC1960 Easting (m):</label>
@@ -582,17 +594,7 @@ body.dark-mode .shortcut-key {
   </div>
   
 
-  <div class="converter">
-    <h2 onclick="toggleSection(this)">Device Location</h2>
-    <div class="converter-content">
-      <button type="button" id="locateBtn" onclick="fetchDeviceLocation()">Get device location</button>
-      <div class="result-box" id="deviceLocationBox" style="display:none; margin-top: 12px;">
-        <p><strong>Latitude:</strong> <span id="deviceLat">—</span></p>
-        <p><strong>Longitude:</strong> <span id="deviceLon">—</span></p>
-        <p><strong>Maps:</strong> <a id="deviceMapsLink" href="#" target="_blank" rel="noopener">Tap to open</a></p>
-      </div>
-    </div>
-  </div>
+
 
   <script>
   function arcToDD() {
@@ -1078,7 +1080,58 @@ function convertARCtoITRF() {
     <div class="result" id="itrf_to_arc_status"></div>
   </div>
 </div>
-
+    <div class="converter">
+      <h2 onclick="toggleSection(this)">📏 Distance Calculator</h2>
+      <div class="converter-content">
+        <label style="font-size: 0.9rem; margin-bottom: 1rem;">
+          <input type="radio" name="distMode" value="utm" onchange="switchDistMode('utm')"> UTM (Easting/Northing)
+          <input type="radio" name="distMode" value="latlon" checked onchange="switchDistMode('latlon')"> Lat/Lon
+        </label>
+        
+        <div id="latLonMode" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label>Point 1 Latitude:</label>
+            <input type="number" id="dist_lat1" step="any">
+            <label>Point 1 Longitude:</label>
+            <input type="number" id="dist_lon1" step="any">
+          </div>
+          <div>
+            <label>Point 2 Latitude:</label>
+            <input type="number" id="dist_lat2" step="any">
+            <label>Point 2 Longitude:</label>
+            <input type="number" id="dist_lon2" step="any">
+          </div>
+        </div>
+        
+        <div id="utmMode" style="display: none; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label>Point 1 Easting (m):</label>
+            <input type="number" id="dist_e1" step="any">
+            <label>Point 1 Northing (m):</label>
+            <input type="number" id="dist_n1" step="any">
+            <label>Point 1 Zone:</label>
+            <select id="dist_zone1">
+              <option value="35">35</option>
+              <option value="36" selected>36</option>
+            </select>
+          </div>
+          <div>
+            <label>Point 2 Easting (m):</label>
+            <input type="number" id="dist_e2" step="any">
+            <label>Point 2 Northing (m):</label>
+            <input type="number" id="dist_n2" step="any">
+            <label>Point 2 Zone:</label>
+            <select id="dist_zone2">
+              <option value="35">35</option>
+              <option value="36" selected>36</option>
+            </select>
+          </div>
+        </div>
+        
+        <button onclick="calculateDistance()">Calculate Distance & Bearing</button>
+        <div id="distanceResult" style="margin-top: 1rem;"></div>
+      </div>
+    </div>
 <script>
   function convertITRFtoARC() {
   const itrfE = parseFloat(document.getElementById('itrf_easting').value);
@@ -1586,58 +1639,7 @@ if ('serviceWorker' in navigator) {
       </div>
     </div>
 
-    <div class="converter">
-      <h2 onclick="toggleSection(this)">📏 Distance Calculator</h2>
-      <div class="converter-content">
-        <label style="font-size: 0.9rem; margin-bottom: 1rem;">
-          <input type="radio" name="distMode" value="latlon" checked onchange="switchDistMode('latlon')"> Latitude/Longitude
-          <input type="radio" name="distMode" value="utm" onchange="switchDistMode('utm')"> UTM (Easting/Northing)
-        </label>
-        
-        <div id="latLonMode" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <div>
-            <label>Point 1 Latitude:</label>
-            <input type="number" id="dist_lat1" step="any">
-            <label>Point 1 Longitude:</label>
-            <input type="number" id="dist_lon1" step="any">
-          </div>
-          <div>
-            <label>Point 2 Latitude:</label>
-            <input type="number" id="dist_lat2" step="any">
-            <label>Point 2 Longitude:</label>
-            <input type="number" id="dist_lon2" step="any">
-          </div>
-        </div>
-        
-        <div id="utmMode" style="display: none; grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <div>
-            <label>Point 1 Easting (m):</label>
-            <input type="number" id="dist_e1" step="any">
-            <label>Point 1 Northing (m):</label>
-            <input type="number" id="dist_n1" step="any">
-            <label>Point 1 Zone:</label>
-            <select id="dist_zone1">
-              <option value="35">35</option>
-              <option value="36" selected>36</option>
-            </select>
-          </div>
-          <div>
-            <label>Point 2 Easting (m):</label>
-            <input type="number" id="dist_e2" step="any">
-            <label>Point 2 Northing (m):</label>
-            <input type="number" id="dist_n2" step="any">
-            <label>Point 2 Zone:</label>
-            <select id="dist_zone2">
-              <option value="35">35</option>
-              <option value="36" selected>36</option>
-            </select>
-          </div>
-        </div>
-        
-        <button onclick="calculateDistance()">Calculate Distance & Bearing</button>
-        <div id="distanceResult" style="margin-top: 1rem;"></div>
-      </div>
-    </div>
+
 
     <div class="converter">
       <h2 onclick="toggleSection(this)">💾 Export Manager</h2>
