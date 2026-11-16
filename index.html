@@ -490,7 +490,7 @@ body.dark-mode .shortcut-key {
 <div id="splash-modal" style="display:flex; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:10000; align-items:center; justify-content:center;">
   <div style="background:#0b1220; color:#fff; padding:18px; border-radius:18px; width:320px; border:3px solid #2f69db; text-align:center; box-shadow:0 10px 35px rgba(0,0,0,.45);">
     <div style="font-size:44px; line-height:1; margin-bottom:10px;">🛰️</div>
-    <div style="font-size:18px; font-weight:800; margin-bottom:6px;">My Handheld GPS</div>
+    <div style="font-size:18px; font-weight:800; margin-bottom:6px;">My Coordinate convertor</div>
     <div style="font-size:13px; opacity:.9; margin-bottom:14px;">
       Created by <span style="color:#12cc6f; font-weight:800;">Alvin Shedrack</span>
     </div>
@@ -1134,7 +1134,7 @@ function convertARCtoITRF() {
           </div>
         </div>
         
-        <button onclick="calculateDistance()">Calculate Distance & Bearing</button>
+        <button onclick="calculateDistance()">Calculate Distance</button>
         <div id="distanceResult" style="margin-top: 1rem;"></div>
       </div>
     </div>
@@ -2402,10 +2402,6 @@ function calculateDistance() {
       <div class="distance-result-item">
         <span>📏 Distance:</span>
         <strong>${distanceKm} km (${distanceM} m)</strong>
-      </div>
-      <div class="distance-result-item">
-        <span>🧭 Bearing:</span>
-        <strong>${bearingNorm.toFixed(1)}°</strong>
       </div>
     </div>
   `;
